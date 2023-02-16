@@ -18,11 +18,13 @@ class AnimePahe():
             'avail_qualities': None,
             'source': None
         }
+    """ GET TOKEN FROM A FILE IF IT EXIST"""
 
     def getTokenFromFile(self):
         with open('token.txt', "r") as f:
             token = f.read()
         return token
+    """ GET TOKEN MANUALLY FROM KWIK"""
 
     def getToken(self):
         token = None
@@ -33,6 +35,7 @@ class AnimePahe():
         with open('token.txt', "w") as f:
             f.write(token)
         return token
+    """ INITIALIZE NEW SESSION """
 
     def getNewSession(self):
         os.remove('kwik.pkl')
@@ -41,6 +44,7 @@ class AnimePahe():
         pickle.dump(self.driver.get_cookies(), open("kwik.pkl", "wb"))
         self.animepahe_parser = AnimePaheParser(self.driver)
         self.token = self.getToken()
+    """ GET ALL LINKS FROM THE ANIME AND DOWNLOAD IT """
 
     def getAllLinks(self, episodes):
         token = self.token
@@ -83,6 +87,7 @@ class AnimePahe():
         # push = pb.push_note(
         #     anime_name, f"Here are the links of {anime_name}: {links} ")
         return total
+    """ INITIALIZATION OF THE APPLICATION """
 
     def start(self):
         query = create_prompt("Search anime")
@@ -117,6 +122,7 @@ class AnimePahe():
         createDirectory(self.anime_details['anime_name'])
         start, end = [1, 1]
         if(details[0] + details[1] != 2):
+            """ ONLY STOPS WHEN THE INPUT IS CORRECT """
             while True:
                 start = int(create_prompt("Enter start of episode: "))
                 if(start < details[0]):
@@ -133,6 +139,7 @@ class AnimePahe():
                     continue
                 break
         os.system("cls")
+        """ GET THE AVAILABLE QUALITIES OF THE ANIME """
         episodes = create_loading(":sparkles: Fetching available qualities", LOADING,
                                   self.animepahe_parser.getEpisodes, self.anime_details['session'], start, end)
         self.anime_details['avail_qualities'] = self.animepahe_parser.getQualities(
@@ -148,6 +155,7 @@ class AnimePahe():
             break
         self.anime_details['source'] = self.anime_details['avail_qualities'][quality - 1]
         a = self.anime_details['anime_name'].replace(":", "")
+        """ STARTS THE DOWNLOAD AND DISPLAYS IT """
         dl = Downloader(self.getAllLinks(episodes),
                         self.anime_details['anime_name'], f"downloads/{a}", 2).start()
 
