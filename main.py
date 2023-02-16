@@ -15,4 +15,3 @@ if __name__ == '__main__':
         answer = create_prompt("Do you want to continue?(Y/N)")
         if(answer != 'y'):
             break
-    # anime(driver)
