@@ -137,13 +137,14 @@ class AnimePaheParser():
             fansub = quality[0]
             res = quality[2].replace('p', '')
             size = quality[3]
+            link = e['href']
             audio = e.find('span', {'class': 'badge-warning'})
             try:
                 audio = audio.text
             except:
                 audio = 'jpn'
             av_qualities.append(
-                {'quality': res, 'fansub': fansub, 'audio': audio, 'disc': ' '})
+                {'quality': res, 'fansub': fansub, 'audio': audio, 'disc': ' ', 'kwik_pahewin': link})
         return av_qualities
 
     def search(self, anime):
@@ -156,10 +157,10 @@ class AnimePaheParser():
         except:
             return None
 
-    def getDefault(self, session):
+    def getDefault(self, anime, session):
         link = None
 
-        q = self.getQualities(session)
+        q = self.getQualities(anime, session)
         for i in q:
             if(i['quality'] == '720'):
                 link = i

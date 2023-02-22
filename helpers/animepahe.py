@@ -63,9 +63,10 @@ class AnimePahe():
 
                 link = self.animepahe_parser.getEpisodeLink(session,
                                                             e['session'], slSource['quality'], slSource['audio'], slSource['fansub'])
-                if link is None:
-                    link = self.animepahe_parser.getDefault(
-                        e['session'])
+
+                if link is not dict:
+                    link = self.animepahe_parser.getDefault(session,
+                                                            e['session'])
                 ads = link['kwik_pahewin']
                 kwik = self.animepahe_parser.getKwikLink(ads)
 
@@ -154,11 +155,13 @@ class AnimePahe():
                 continue
             break
         self.anime_details['source'] = self.anime_details['avail_qualities'][quality - 1]
-        a = self.anime_details['anime_name'].replace(":", "")
+        a = self.anime_details['anime_name'].replace(":", "").replace("/", "")
+        a = a.replace("/", "").replace("\\", "")
+        print(a)
         """ STARTS THE DOWNLOAD AND DISPLAYS IT """
         dl = Downloader(self.getAllLinks(episodes),
-                        self.anime_details['anime_name'], f"downloads/{a}", 2).start()
+                        a, f"downloads/{a}", 2).start()
 
         create_msg(
             "Success", f"All episodes of {self.anime_details['anime_name']} has been downloaded.", TEXT_MSG_COLOR[0])
-        return
+        return dl

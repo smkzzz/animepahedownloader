@@ -11,7 +11,12 @@ driver = Driver()
 animepahe = AnimePahe(driver.getDriver())
 if __name__ == '__main__':
     while True:
-        animepahe.start()
+        try:
+            result = animepahe.start()
+            for i in result[0]:
+                result[1].remove_task(i['task'])
+        except:
+            pass
         answer = create_prompt("Do you want to continue?(Y/N)")
         if(answer != 'y'):
             break
